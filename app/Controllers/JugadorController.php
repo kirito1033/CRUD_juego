@@ -2,38 +2,44 @@
 
 namespace App\Controllers;
 
-use App\Models\JugadorStatusModel;
+use App\Models\JugadorModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
 
 
 
-class JugadorStatus extends Controller
+class JugadorController extends Controller
 {
 
     private $primarykey;
-    private $StatusModel;
+    private $jugador;
     private $data;
     private $model;
     
     public function __construct() 
     { 
-        $this->primaryKey = "Jugador_status_id"; 
-        $this->StatusModel = new JugadorStatusModel(); 
+        $this->primaryKey = "jugador_id"; 
+        $this->jugadorModel = new JugadorModel(); 
         $this->data = []; 
-        $this->model = "jugadorStatus"; 
+        $this->model = "jugadorModel"; 
     } 
 
   
     public function index() 
     { 
-        $this->data['title'] = "JUGADOR STATUS"; 
-        $this->data[$this->model] = $this->StatusModel->orderBy($this->primaryKey, 'ASC')->findAll(); 
-        return view('jugadorStatus/status_view', $this->data); 
+    $this->data['title'] = "JUGADOR"; 
+    $this->data[$this->model] = $this->jugadorModel->orderBy($this->primaryKey, 'ASC')->findAll(); 
+
+    // Cargar modelos de roles y estados
+    $roleModel = new \App\Models\RoleModel();
+    $statusModel = new \App\Models\JugadorStatusModel();
+
+    $this->data['roles'] = $roleModel->findAll();
+    $this->data['estados'] = $statusModel->findAll();
+
+    return view('jugador/jugador_view', $this->data); 
     }
     
-
-        
     public function create() 
     { 
         if ($this->request->isAJAX()) { 
@@ -41,7 +47,7 @@ class JugadorStatus extends Controller
             $dataModel = $this->getDataModel(); 
 
             
-            if ($this->StatusModel->insert($dataModel)) { 
+            if ($this->jugadorModel->insert($dataModel)) { 
                 $data['message'] = 'success'; 
                 $data['response'] = ResponseInterface::HTTP_OK; 
                 $data['data'] = $dataModel; 
@@ -60,16 +66,16 @@ class JugadorStatus extends Controller
     }
 
     
-    public function singleJugadorStatus($id = null) 
+    public function singleJugador($id = null) 
     { 
         if ($this->request->isAJAX()) { 
 
-            if ($data[$this->model] = $this->StatusModel->where($this->primaryKey, $id)->first()) { 
+            if ($data[$this->model] = $this->jugadorModel->where($this->primaryKey, $id)->first()) { 
                 $data['message'] = 'success'; 
                 $data['response'] = ResponseInterface::HTTP_OK; 
                 $data['csrf'] = csrf_hash(); 
             } else { 
-                $data['message'] = 'Error retrieving user status'; 
+                $data['message'] = 'Error retrieving jugador'; 
                 $data['response'] = ResponseInterface::HTTP_NO_CONTENT; 
                 $data['data'] = ''; 
             } 
@@ -92,18 +98,20 @@ class JugadorStatus extends Controller
             $id = $this->request->getVar($this->primaryKey); 
             
             $dataModel = [
-                'Jugador_status_name' => $this->request->getVar('Jugador_status_name'), 
-                'Jugador_status_description' => $this->request->getVar('Jugador_status_description'), 
+                'jugador_name' => $this->request->getVar('jugador_name'), 
+                'jugador_password' => password_hash($this->request->getVar('jugador_password'), PASSWORD_DEFAULT),
+                'roles_fk' => $this->request->getVar('roles_fk'), 
+                'jugador_status_fk' => $this->request->getVar('jugador_status_fk'), 
                 'update_at' => $today 
             ]; 
             
-            if ($this->StatusModel->update($id, $dataModel)) { 
+            if ($this->jugadorModel->update($id, $dataModel)) { 
                 $data['message'] = 'success'; 
                 $data['response'] = ResponseInterface::HTTP_OK; 
                 $data['data'] = $dataModel; 
                 $data['csrf'] = csrf_hash(); 
             } else { 
-                $data['message'] = 'Error updating user status'; 
+                $data['message'] = 'Error updating jugador'; 
                 $data['response'] = ResponseInterface::HTTP_NO_CONTENT; 
                 $data['data'] = ''; 
             } 
@@ -121,13 +129,13 @@ class JugadorStatus extends Controller
     { 
         try { 
 
-            if ($this->StatusModel->where($this->primaryKey, $id)->delete($id)) { 
+            if ($this->jugadorModel->where($this->primaryKey, $id)->delete($id)) { 
                 $data['message'] = 'success'; 
                 $data['response'] = ResponseInterface::HTTP_OK; 
                 $data['data'] = "OK"; 
                 $data['csrf'] = csrf_hash(); 
             } else { 
-                $data['message'] = 'Error deleting status'; 
+                $data['message'] = 'Error deleting jugador'; 
                 $data['response'] = ResponseInterface::HTTP_CONFLICT; 
                 $data['data'] = 'error'; 
             } 
@@ -143,15 +151,17 @@ class JugadorStatus extends Controller
     public function getDataModel() 
     { 
         $data = [ 
-            'Jugador_status_id' => $this->request->getVar('Jugador_status_id'), 
-            'Jugador_status_name' => $this->request->getVar('Jugador_status_name'), 
-            'Jugador_status_description' => $this->request->getVar('Jugador_status_description'), 
+            'jugador_id' => $this->request->getVar('jugador_id'), 
+            'jugador_name' => $this->request->getVar('jugador_name'), 
+           'jugador_password' => password_hash($this->request->getVar('jugador_password'), PASSWORD_DEFAULT),
+            'roles_fk' => $this->request->getVar('roles_fk'), 
+            'jugador_status_fk' => $this->request->getVar('jugador_status_fk'), 
             'update_at' => $this->request->getVar('update_at') 
         ]; 
         return $data; 
     }
 
     
-
+    
  
 }

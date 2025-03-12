@@ -25,4 +25,14 @@ $routes->group("jugadorRol", function($routes) {
     $routes->post("update", "JugadorRolController::update"); 
 });
 
+$routes->group("jugador", function($routes) { 
+    $routes->get("/", "JugadorController::index"); 
+    $routes->get("show", "JugadorController::index"); 
+    $routes->get("edit/(:num)", "JugadorController::singleJugador/$1"); 
+    $routes->get("delete/(:num)", "JugadorController::delete/$1"); 
+    $routes->post("add", "JugadorController::create"); 
+    $routes->post("update", "JugadorController::update"); 
+    $routes->get('create', 'JugadorController::create');
+    $routes->post('store', 'JugadorController::store'); // Para guardar el formulario
+});
 

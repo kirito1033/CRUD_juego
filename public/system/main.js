@@ -7,6 +7,7 @@ class Main {
         this.elementJson = {}; 
         this.formData = new FormData(); 
         this.preload = document.getElementById(preloadId); 
+        
     }
 
     showPreload(){
@@ -49,12 +50,12 @@ class Main {
         } 
     
         for (let j = 0; j < elementsSelect.length; j++) { 
-            if (elementsSelect[i].classList.contains(this.classEdit)) { 
-                elementsSelect[i].disabled = true; 
+            if (elementsSelect[j].classList.contains(this.classEdit)) { 
+                elementsSelect[j].disabled = true; 
             } else { 
-                elementsSelect[i].disabled = false; 
+                elementsSelect[j].disabled = false; 
             } 
-        } 
+        }  
     }
     enableFormAll() { 
         var elementsInput = this.myForm.querySelectorAll('input'); 
@@ -65,7 +66,7 @@ class Main {
         } 
     
         for (let j = 0; j < elementsSelect.length; j++) { 
-            elementsSelect[i].disabled = false; 
+            elementsSelect[j].disabled = false; 
         } 
     }
     
