@@ -36,3 +36,13 @@ $routes->group("jugador", function($routes) {
     $routes->post('store', 'JugadorController::store'); // Para guardar el formulario
 });
 
+$routes->group("profile", function($routes) { 
+    $routes->get("/", "ProfileController::index"); 
+    $routes->get("show", "ProfileController::index"); 
+    $routes->get("edit/(:num)", "ProfileController::singleProfile/$1"); 
+    $routes->get("delete/(:num)", "ProfileController::delete/$1"); 
+    $routes->post("add", "ProfileController::create"); 
+    $routes->post("update", "ProfileController::update"); 
+    $routes->get('create', 'ProfileController::create');
+    $routes->post('store', 'ProfileController::store'); // Para guardar el formulario
+});
