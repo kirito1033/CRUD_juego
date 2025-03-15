@@ -31,7 +31,5 @@
     </select>
     <label for="jugador_status_fk">Estado Jugador</label>
     </div>
-
-    <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 

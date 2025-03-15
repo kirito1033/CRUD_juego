@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    
+
     <?php require_once('../app/Views/preload/preload.php'); ?>
 
     <!-- Navbar -->
@@ -23,7 +23,7 @@
         <button type="button" class="btn btn-primary" onclick="add()" style="font-size: 0.5em;">ADD</button>
 
         <!-- Container Table -->
-        <?php require_once('../app/Views/jugador/table.php'); ?>
+        <?php require_once('../app/Views/warriorpower/table.php'); ?>
         <!-- End Container Table -->
     </div>
     <!-- End Container -->
@@ -38,7 +38,7 @@
                 </div>
                 <div class="modal-body">
                     <!-- Form -->
-                    <?php require_once('../app/Views/jugador/form.php') ?>
+                    <?php require_once('../app/Views/warriorpower/form.php') ?>
                     <!-- End Form -->
                 </div>
                 <div class="modal-footer">
@@ -59,7 +59,7 @@
     <?php require_once('../app/Views/assets/js/dataTable.php') ?>
 
     <!-- JS Controller -->
-    <script src="http://localhost/CRUD/crud/public/controllers/jugador/jugador.js"></script>
+    <script src="http://localhost/CRUD/crud/public/controllers/warriorpower/warriorpower.js"></script>
 
 </body>
 

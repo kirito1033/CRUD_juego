@@ -11,16 +11,37 @@
                     <a class="nav-link active" aria-current="page" href="#">Home</a> 
                 </li> 
                 <li class="nav-item"> 
-                    <a class="nav-link" href="#">Jugador Status</a> 
+                    <a class="nav-link" href="/jugador">Jugador</a> 
                 </li> 
                 <li class="nav-item"> 
-                    <a class="nav-link" href="#">Roles</a> 
+                    <a class="nav-link" href="/profile">Profile</a> 
                 </li> 
                 <li class="nav-item"> 
-                    <a class="nav-link" href="#">Profile</a> 
+                    <a class="nav-link" href="/jugadorRol">Roles</a> 
                 </li> 
                 <li class="nav-item"> 
-                    <a class="nav-link" href="#">Jugador</a> 
+                    <a class="nav-link" href="/jugadorStatus">Jugador Status</a> 
+                </li> 
+                <li class="nav-item"> 
+                    <a class="nav-link" href="/warrior">Guerrero</a> 
+                </li> 
+                <li class="nav-item"> 
+                    <a class="nav-link" href="/warriortype">Guerrero Tipo</a> 
+                </li> 
+                <li class="nav-item"> 
+                    <a class="nav-link" href="/race">Raza</a> 
+                </li> 
+                <li class="nav-item"> 
+                    <a class="nav-link" href="/warriorpower">Guerrero Poder</a> 
+                </li> 
+                <li class="nav-item"> 
+                    <a class="nav-link" href="/warriorspells">Guerrero Hechizo</a> 
+                </li> 
+                <li class="nav-item"> 
+                    <a class="nav-link" href="/power">Poder</a> 
+                </li> 
+                <li class="nav-item"> 
+                    <a class="nav-link" href="/spells">Hechizo</a> 
                 </li> 
             </ul> 
             <form class="d-flex"> 

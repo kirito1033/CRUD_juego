@@ -4,3 +4,4 @@
       crossorigin="anonymous"> 
 <!-- <link href="../assets/css/style.css" rel="stylesheet"> -->
 <link href="http://localhost/CRUD/crud/public/assets/css/style.css" rel="stylesheet">
+
