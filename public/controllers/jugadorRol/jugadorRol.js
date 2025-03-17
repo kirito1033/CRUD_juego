@@ -19,10 +19,12 @@ var resultfetch = null;
 
 
 function show(id) {
+   
     mainApp.disabledFormAll();
     mainApp.resetForm();
     btnEnabled(true);
     getDataId(id);
+
 }
 function add() {
     mainApp.enableFormAll();
@@ -69,13 +71,14 @@ async function getDataId(id) {
      resultFetch = getData(data, method, url);
     resultFetch.then(response => response.json())
         .then(data => {
-            // console.log(data);
+         
             // Set data form
             mainApp.setDataFormJson(data[model]);
             // Show Modal
             mainApp.showModal();
             // Hidden Preload
             mainApp.hiddenPreload();
+           
         })
         .catch(error => {
             console.error(error);
@@ -83,6 +86,7 @@ async function getDataId(id) {
             mainApp.hiddenPreload();
         })
         .finally();
+        
 }
 
 
@@ -92,7 +96,7 @@ function btnEnabled(type) {
 
 async function getData(data, method, url) {
     var parameters;
-    // Show Preload
+ 
     mainApp.showPreload();
     if (method === "GET") {
         parameters = {
@@ -112,7 +116,9 @@ async function getData(data, method, url) {
             }
         }
     }
+ 
     return await fetch(url, parameters);
+    
 }
 
 $(document).ready(function () {
@@ -132,7 +138,7 @@ mainApp.getForm().addEventListener("submit", async function(event) {
              url = URI_ROL + LIST_CRUD[0]; // Replace 0 with the appropriate index for insertion if needed
              data = mainApp.getDataFormJson();
              resultFetch = getData(data, method, url);
-
+            
             resultFetch.then(response => response.json())
                 .then(data => {
                     // Process the response data if needed

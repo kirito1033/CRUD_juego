@@ -13,7 +13,6 @@ const mainApp = new Main(modalId, formId, classEdit, preloadId);
 var insertUpdate = true;
 var url = "";
 var method = "";
-var url = "";
 var data = "";
 var resultfetch = null;
 
@@ -30,7 +29,7 @@ function add() {
     insertUpdate = true;
     btnEnabled(false);
     mainApp.showModal();
-    console.log(data);
+  
 }
 function edit(id) {
     mainApp.disabledFormEdit();
@@ -64,24 +63,28 @@ async function delete_(id) {
 }
 
 async function getDataId(id) {
+   
      method = 'GET';
      url = URI_JUGADOR + LIST_CRUD[1] + '/' + id;
      data = mainApp.getDataFormJson();
      resultFetch = getData(data, method, url);
     resultFetch.then(response => response.json())
         .then(data => {
-            //console.log(data);
+            console.log(data);
             // Set data form
             mainApp.setDataFormJson(data[model]);
             // Show Modal
             mainApp.showModal();
             // Hidden Preload
             mainApp.hiddenPreload();
+       
         })
         .catch(error => {
             console.error(error);
             // Hidden Preload
             mainApp.hiddenPreload();
+
+        
         })
         .finally();
 }

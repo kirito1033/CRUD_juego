@@ -24,4 +24,6 @@ const URI_WARRIORPOWER="/warriorpower/"
 
 const URI_WARRIORSPELLS="/warriorspells/"
 
+const URI_REGISTRARUSER="/registerUser/"
+
 

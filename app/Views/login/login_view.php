@@ -31,11 +31,24 @@
             </div>
 
             <button type="submit" class="btn btn-primary w-100">Ingresar</button>
+          
         </form>
+
+        <form method="post" action="<?= site_url('auth/register') ?>">
+                <button type="submit" class="btn btn-secondary w-100 mt-3">Registrarse</button>
+            </form>
+
+        <?php if(session()->getFlashdata('error')): ?>
+            <div class="alert alert-danger p-2 m-3 text-center">
+                <?= session()->getFlashdata('error') ?>
+            </div>
+        <?php endif; ?>
     </div>
+  
 </div>
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

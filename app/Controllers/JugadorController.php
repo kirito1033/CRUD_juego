@@ -13,6 +13,7 @@ class JugadorController extends Controller
     protected $data;
     protected $primaryKey = "jugador_id";
 
+
     public function __construct()
     {
         $this->jugadorModel = new JugadorModel();
@@ -45,7 +46,7 @@ class JugadorController extends Controller
 
     public function loginView()
     {
-        return view('login_view'); // Asegúrate de que esta vista existe en app/Views/auth/login.php
+        return view('login/login_view'); // Asegúrate de que esta vista existe en app/Views/auth/login.php
     }
 
     public function verificarSesion()
@@ -107,6 +108,28 @@ class JugadorController extends Controller
         } else { 
             return $this->response->setJSON(['message' => 'Error Ajax'], ResponseInterface::HTTP_CONFLICT);
         } 
+    }
+
+    public function singleJugador($id = null) 
+    { 
+        if ($this->request->isAJAX()) { 
+
+            if ($data[$this->model] = $this->jugadorModel->where($this->primaryKey, $id)->first()) { 
+                $data['message'] = 'success'; 
+                $data['response'] = ResponseInterface::HTTP_OK; 
+                $data['csrf'] = csrf_hash(); 
+            } else { 
+                $data['message'] = 'Error retrieving user rol'; 
+                $data['response'] = ResponseInterface::HTTP_NO_CONTENT; 
+                $data['data'] = ''; 
+            } 
+        } else { 
+            $data['message'] = 'Error Ajax'; 
+            $data['response'] = ResponseInterface::HTTP_CONFLICT; 
+            $data['data'] = ''; 
+        } 
+
+        echo json_encode($data);  
     }
 
     public function update() 

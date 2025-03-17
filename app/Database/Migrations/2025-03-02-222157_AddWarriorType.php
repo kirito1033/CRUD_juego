@@ -41,6 +41,6 @@ class AddWarriorType extends Migration
 
     public function down()
     {
-        $this->forge->dropTable('WARRIOR_TYPE');
+        $this->forge->dropTable('warrior_type');
     }
 }

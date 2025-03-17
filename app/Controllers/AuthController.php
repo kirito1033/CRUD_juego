@@ -22,10 +22,10 @@ class AuthController extends Controller
             return $this->response->setJSON(['error' => 'Usuario o contraseña incorrectos'])->setStatusCode(401);
         }
 
-        $key = "clave_secreta"; // Reemplázala por una clave segura
+        $key = "crudproject"; 
         $payload = [
             'iat' => time(),
-            'exp' => time() + 3600, // Expira en 1 hora
+            'exp' => time() + 3600, 
             'data' => [
                 'id' => $jugador['jugador_id'],
                 'username' => $jugador['jugador_name']

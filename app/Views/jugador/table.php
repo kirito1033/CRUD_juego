@@ -15,7 +15,7 @@
                             <tr class="text-center">
                                 <td><?php echo $obj['jugador_id']; ?></td>
                                 <td><?php echo $obj['jugador_name']; ?></td>
-                                <td><?php echo $obj['jugador_password']; ?></td>
+                                <td><input type="password" name="" id="" value="<?php echo $obj['jugador_password']; ?>"></td>
                                 
                                 <!-- Buscar el nombre del rol según el roles_fk -->
                                 <td>

@@ -14,13 +14,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password })
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.token) {
-                    localStorage.setItem('token', data.token); // Guardar token en localStorage
-                    window.location.href = '/jugador'; // Redirigir a jugador
+            .then(response => response.json().then(data => ({ status: response.status, body: data })))
+            .then(({ status, body }) => {
+                if (status === 200 && body.token) {
+                    localStorage.setItem('token', body.token); // Guardar token en localStorage
+                    window.location.href = '/jugador'; // Redirigir a la pestaña de jugador
                 } else {
-                    errorMessage.textContent = data.error || 'Credenciales incorrectas';
+                    errorMessage.textContent = body.error || 'Credenciales incorrectas';
                     errorMessage.classList.remove('d-none');
                 }
             })
@@ -32,3 +32,4 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
