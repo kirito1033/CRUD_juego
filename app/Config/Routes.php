@@ -124,6 +124,14 @@ $routes->group('auth', function($routes) {
     $routes->get('login', 'JugadorController::loginView'); // Esta ruta carga la vista del login
     $routes->post('login', 'JugadorController::login'); // Esta procesa el login
     $routes->get('verificarSesion', 'JugadorController::verificarSesion');
-    $routes->post('register', 'JugadorController::registerView'); 
-    $routes->post('register', 'JugadorController::create');
+    $routes->get('register', 'JugadorController::registerView');
+    $routes->post('store', 'JugadorController::store');
+    $routes->get('profile', 'ProfileController::profileView');
+    $routes->post('store2', 'ProfileController::store');
+    $routes->get('logout', 'AuthController::logout');
+});
+
+$routes->group('juego', function($routes) {
+    $routes->get('/', 'ProfileController::juegoView'); 
+  
 });

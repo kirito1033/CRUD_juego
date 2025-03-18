@@ -34,9 +34,7 @@
           
         </form>
 
-        <form method="post" action="<?= site_url('auth/register') ?>">
-                <button type="submit" class="btn btn-secondary w-100 mt-3">Registrarse</button>
-            </form>
+        <a href="<?= base_url('/auth/register') ?>" class="btn btn-secondary mt-3">Registrar Jugador</a>
 
         <?php if(session()->getFlashdata('error')): ?>
             <div class="alert alert-danger p-2 m-3 text-center">

@@ -10,6 +10,7 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class ProfileController extends Controller
 {
+    
 
     private $primarykey;
     private $profile;
@@ -159,7 +160,91 @@ class ProfileController extends Controller
         return $data; 
     }
 
-    
-    
+    public function profileView()
+    {
+        
+    $session = session();
+    $jugador_id_fk = $session->get('jugador_id_fk'); // Obtener ID del jugador
+    $jugador_role = $session->get('jugador_role');   // Obtener el rol
+  
+    // Verificar si el perfil ya existe
+    $profile = $this->profileModel->where('jugador_id_fk', $jugador_id_fk)->first();
+
+    if ($profile) {
+        // 🔀 Redirigir según el rol
+        if ($jugador_role === "1") {
+            return redirect()->to('/juego');
+        } elseif ($jugador_role === "2") {
+            return redirect()->to('/jugador');
+        }
+    }
+
+    // Si no tiene perfil, mostrar el formulario de registro
+    return view('login/profile', ['jugador_id_fk' => $jugador_id_fk]);
+    }
+
  
+    
+    public function store()
+    {
+        $session = session();
+        $jugador_id_fk = $this->request->getVar('jugador_id_fk');
+    
+        if (!$jugador_id_fk) {
+            return redirect()->back()->withInput()->with('error', 'El ID del jugador es requerido');
+        }
+    
+        // Obtener el rol desde la sesión
+        $jugador_role = $session->get('jugador_role');
+    
+        // Procesar la imagen
+        $file = $this->request->getFile('profile_photo'); // Obtener el archivo
+    
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            $newName = $file->getRandomName(); // Generar un nombre aleatorio
+            $file->move('uploads/', $newName); // Guardar en la carpeta 'uploads/'
+            $photoPath = 'uploads/' . $newName; // Ruta de la imagen
+        } else {
+            $photoPath = null; // Si no hay imagen válida, dejar null
+        }
+    
+        $data = [
+            'profile_email' => $this->request->getVar('profile_email'), 
+            'profile_name' => $this->request->getVar('profile_name'), 
+            'profile_photo' => $photoPath, // Guardar la ruta en la base de datos
+            'jugador_id_fk' => $jugador_id_fk, 
+            'update_at' => date("Y-m-d H:i:s")
+        ];
+    
+        if ($this->profileModel->insert($data)) {
+            // 🔀 Redirigir según el rol
+            if ($jugador_role === "1") {
+                return redirect()->to('/juego')->with('success', 'Perfil registrado exitosamente');
+            } elseif ($jugador_role === "2") {
+                return redirect()->to('/jugador')->with('success', 'Perfil registrado exitosamente');
+            } else {
+                return redirect()->to('/login')->with('error', 'Rol no reconocido');
+            }
+        } else {
+            return redirect()->back()->withInput()->with('error', 'Error al registrar el perfil');
+        }
+    }
+
+    public function juegoView()
+    {
+    $session = session();
+    $jugador_id_fk = $session->get('jugador_id_fk');
+
+    // Obtener los datos del perfil
+    $profile = $this->profileModel->where('jugador_id_fk', $jugador_id_fk)->first();
+
+    if (!$profile) {
+        return redirect()->to('login/login_view')->with('error', 'No se encontró el perfil.');
+    }
+
+    return view('juego/juego_view', ['profile' => $profile]);
+    }
+
+    
+    
 }

@@ -36,4 +36,12 @@ class AuthController extends Controller
 
         return $this->response->setJSON(['token' => $token]);
     }
+    public function logout()
+    {
+    $session = session();
+    $session->remove('token'); // Eliminar el token
+    $session->destroy(); // Destruir la sesión
+
+    return redirect()->to('auth/login')->with('success', 'Sesión cerrada correctamente');
+    }
 }

@@ -12,6 +12,7 @@ class JugadorController extends Controller
     protected $jugadorModel;
     protected $data;
     protected $primaryKey = "jugador_id";
+    
 
 
     public function __construct()
@@ -33,12 +34,17 @@ class JugadorController extends Controller
                 'id' => $jugador['jugador_id'],
                 'name' => $jugador['jugador_name']
             ]);
-    
-            // Guardar el token en sesión
-            session()->set('token', $token);
-    
+
+            $session = session();
+            $session->set([
+                'token' => $token,
+                'jugador_id_fk' => $jugador['jugador_id'], // Se guarda el ID en sesión
+                'jugador_role' => $jugador['roles_fk'] // Guardar el rol en sesión
+            ]);
+            
             // Redirigir al usuario a la vista de jugador
-            return redirect()->to('/jugador');
+            return redirect()->to('/auth/profile');
+            
         } else {
             return redirect()->to('/auth/login')->with('error', 'Credenciales incorrectas');
         }
@@ -46,8 +52,37 @@ class JugadorController extends Controller
 
     public function loginView()
     {
-        return view('login/login_view'); // Asegúrate de que esta vista existe en app/Views/auth/login.php
+        return view('login/login_view'); 
     }
+    
+    public function registerView()
+    {
+    $roleModel = new \App\Models\RoleModel();
+    $statusModel = new \App\Models\JugadorStatusModel();
+
+    $this->data['roles'] = $roleModel->findAll();
+    $this->data['estados'] = $statusModel->findAll();
+
+    return view('login/register', $this->data);
+    }
+
+public function store()
+{
+    $data = [
+        'jugador_name' => $this->request->getPost('jugador_name'),
+        'jugador_password' => password_hash($this->request->getPost('jugador_password'), PASSWORD_DEFAULT),
+        'roles_fk' => 1,
+        'jugador_status_fk' => 1,
+        'update_at' => date("Y-m-d H:i:s")
+    ];
+
+    if ($this->jugadorModel->insert($data)) {
+        return redirect()->to('/auth/login')->with('success', 'Jugador registrado exitosamente');
+    } else {
+        return redirect()->back()->withInput()->with('error', 'Error al registrar el jugador');
+    }
+}
+    
 
     public function verificarSesion()
     {
