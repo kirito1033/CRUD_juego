@@ -56,10 +56,14 @@
 
     <!-- Scripts -->
     <?php require_once('../app/Views/assets/js/js.php') ?>
-    <?php require_once('../app/Views/assets/js/dataTable.php') ?>
+
 
     <!-- JS Controller -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+
     <script src="http://localhost/CRUD/crud/public/controllers/warrior/warrior.js"></script>
+    
 
 </body>
 

@@ -18,7 +18,12 @@
                 <strong>Token:</strong> <?= session()->getFlashdata('token') ?>
             </div>
         <?php endif; ?>
-
+        <?php if (session()->get('alert_message')): ?>
+            <script type="text/javascript">
+                alert("<?php echo session()->get('alert_message'); ?>");
+            </script>
+            <?php session()->remove('alert_message'); ?>
+        <?php endif; ?>
         <form action="<?= site_url('auth/login') ?>" method="post">
             <div class="mb-3">
                 <label for="username" class="form-label">Usuario:</label>
@@ -33,6 +38,7 @@
             <button type="submit" class="btn btn-primary w-100">Ingresar</button>
           
         </form>
+        
 
         <a href="<?= base_url('/auth/register') ?>" class="btn btn-secondary mt-3">Registrar Jugador</a>
 

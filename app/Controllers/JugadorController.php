@@ -24,32 +24,45 @@ class JugadorController extends Controller
 
     public function login()
     {
-        $username = $this->request->getVar('username');
-        $password = $this->request->getVar('password');
-    
-        $jugador = $this->jugadorModel->where('jugador_name', $username)->first();
-    
-        if ($jugador && password_verify($password, $jugador['jugador_password'])) {
-            $token = JwtHelper::generateToken([
-                'id' => $jugador['jugador_id'],
-                'name' => $jugador['jugador_name']
-            ]);
+    $username = $this->request->getVar('username');
+    $password = $this->request->getVar('password');
 
-            $session = session();
-            $session->set([
-                'token' => $token,
-                'jugador_id_fk' => $jugador['jugador_id'], // Se guarda el ID en sesión
-                'jugador_role' => $jugador['roles_fk'] // Guardar el rol en sesión
-            ]);
-            
-            // Redirigir al usuario a la vista de jugador
-            return redirect()->to('/auth/profile');
-            
-        } else {
-            return redirect()->to('/auth/login')->with('error', 'Credenciales incorrectas');
+    $jugador = $this->jugadorModel->where('jugador_name', $username)->first();
+
+    if ($jugador && password_verify($password, $jugador['jugador_password'])) {
+        $token = JwtHelper::generateToken([
+            'id' => $jugador['jugador_id'],
+            'name' => $jugador['jugador_name']
+        ]);
+
+        $session = session();
+
+        // Si el jugador tiene rol 1 y no hay jugador 1, se guarda como jugador 1
+        if ($jugador['roles_fk'] == "1" && !$session->has('token_jugador1')) {
+            $session->set('token_jugador1', $token);
+            $session->set('jugador1_id', $jugador['jugador_id']);
+            $session->set('jugador_id_fk', $jugador['jugador_id']); // Asegúrate de guardar jugador_id_fk
+        
+            return redirect()->to('/auth/login')->with('alert_message', 'Jugador 1 logueado. Ahora ingrese el Jugador 2.');
         }
+
+        // Si hay jugador 1, se guarda este como jugador 2
+        else if ($session->has('token_jugador1') && !$session->has('token_jugador2')) {
+            $session->set('token_jugador2', $token);
+            $session->set('jugador2_id', $jugador['jugador_id']);
+            $session->set('jugador_id_fk', $jugador['jugador_id']); // Asegúrate de guardar jugador_id_fk
+        
+            return redirect()->to('/verificar-usuarios');
+        }
+
+        return redirect()->to('/auth/login')->with('alert_message', 'Ya hay dos jugadores logueados.');
+    } else {
+        return redirect()->to('/auth/login')->with('alert_message', 'Credenciales incorrectas');
+    }
     }
 
+
+    
     public function loginView()
     {
         return view('login/login_view'); 
@@ -215,4 +228,5 @@ public function store()
             'update_at' => date("Y-m-d H:i:s")
         ]; 
     }
+   
 }

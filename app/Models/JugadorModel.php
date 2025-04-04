@@ -18,4 +18,15 @@ class JugadorModel extends Model
     
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
+
+    public function getJugadorConRol($jugador_id)
+    {
+        return $this->select('jugadores.*, jugador_roles.Roles_name AS role_name') // 🔹 Asignamos alias 'role_name'
+            ->join('jugador_roles', 'jugadores.roles_fk = jugador_roles.Roles_id', 'left') // 🔹 Unimos con jugador_roles
+            ->where('jugadores.jugador_id', $jugador_id)
+            ->first();
+    }
+    
+    
 }
+

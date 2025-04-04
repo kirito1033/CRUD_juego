@@ -27,9 +27,12 @@ class WarriorController extends Controller
   
     public function index() 
     { 
+
+   
+        
     $this->data['title'] = "WARRIOR"; 
     $this->data[$this->model] = $this->warrior->orderBy($this->primaryKey, 'ASC')->findAll(); 
-
+   
     // Cargar modelos de roles y estados
     $type_id = new \App\Models\WarriorTypeModel();
     $race_id = new \App\Models\RaceModel();
@@ -40,9 +43,21 @@ class WarriorController extends Controller
     return view('warrior/warrior_view', $this->data); 
     }
     
+    public function prueba() 
+    {
+        $type_id = new \App\Models\WarriorTypeModel();
+        $race_id = new \App\Models\RaceModel();
+    
+        $this->data['types'] = $type_id->findAll();
+        $this->data['races'] = $race_id->findAll();
+        return view('warrior/prueba', $this->data); 
+    }
+
+
     public function create() 
     { 
         if ($this->request->isAJAX()) { 
+         
          
             $dataModel = $this->getDataModel(); 
 
@@ -107,6 +122,7 @@ class WarriorController extends Controller
                 'status' => $this->request->getVar('status'), 
                 'type_id' => $this->request->getVar('type_id'), 
                 'race_id' => $this->request->getVar('race_id'), 
+                'image' => $this->request->getVar('image'), 
                 'updated_at' => $today 
             ]; 
             
@@ -166,6 +182,7 @@ class WarriorController extends Controller
             'status' => $this->request->getVar('status'), 
             'type_id' => $this->request->getVar('type_id'), 
             'race_id' => $this->request->getVar('race_id'), 
+            'image' => $this->request->getVar('image'), 
             'update_at' => $this->request->getVar('update_at') 
         ]; 
         return $data; 
@@ -173,5 +190,42 @@ class WarriorController extends Controller
 
     
     
+    public function store3()
+    { 
+     
+       
+        $file = $this->request->getFile('image'); // Obtener el archivo
+      
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            $newName = $file->getRandomName(); // Generar un nombre aleatorio
+            $file->move('uploads/', $newName); // Guardar en la carpeta 'uploads/'
+            $photoPath = 'uploads/' . $newName; // Ruta de la imagen
+         
+           
+        } else {
+            $photoPath = null; // Si no hay imagen válida, dejar null
+        }
+    
+        $data = [
+            'name' => $this->request->getVar('name'), 
+            'total_power' => $this->request->getVar('total_power'), 
+            'total_magic' => $this->request->getVar('total_magic'), 
+            'health' => $this->request->getVar('health'), 
+            'speed' => $this->request->getVar('speed'), 
+            'intelligence' => $this->request->getVar('intelligence'), 
+            'status' => $this->request->getVar('status'), 
+            'type_id' => $this->request->getVar('type_id'), 
+            'race_id' => $this->request->getVar('race_id'), 
+            'image' => $photoPath,
+            'update_at' => date("Y-m-d H:i:s")
+        ];
+    
+        if ($this->warrior->insert($data)) {
+         
+            
+        } else {
+            error_log("Error en inserción: " . print_r($data, true));
+        }
+    }
  
 }

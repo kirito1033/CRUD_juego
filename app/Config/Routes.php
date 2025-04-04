@@ -92,9 +92,10 @@ $routes->group("warrior", function($routes) {
     $routes->get("delete/(:num)", "WarriorController::delete/$1"); 
     $routes->post("add", "WarriorController::create"); 
     $routes->post("update", "WarriorController::update"); 
-
-   
+    $routes->post('store3', 'WarriorController::store3');
+    $routes->get("prueba", "WarriorController::prueba"); 
 });
+
 
 $routes->group("warriorpower", function($routes) { 
     $routes->get("/", "WarriorPowerController::index"); 
@@ -129,9 +130,30 @@ $routes->group('auth', function($routes) {
     $routes->get('profile', 'ProfileController::profileView');
     $routes->post('store2', 'ProfileController::store');
     $routes->get('logout', 'AuthController::logout');
+    
 });
 
 $routes->group('juego', function($routes) {
     $routes->get('/', 'ProfileController::juegoView'); 
-  
+    $routes->get('guerreros', 'juegoController::guerreroView'); 
+    $routes->get('crear', 'Partidas::index');
+
 });
+
+$routes->group('partidas', function($routes) {
+    $routes->get('/', 'Partidas::index'); 
+    $routes->post('store', 'Partidas::store');  
+    $routes->get('unirse/(:num)', 'Partidas::unirsePartida/$1'); 
+    $routes->get('mostrarUltimaPartida/(:num)', 'Partidas::mostrarUltimaPartida/$1');
+});
+
+$routes->group('battle', function($routes) {
+    $routes->post('fight', 'BattleController::fight');
+});
+
+$routes->get('verificar-usuarios', 'ProfileController::verificarUsuarios');
+$routes->post('add-win/(:any)', 'GameController::addWin/$1');
+$routes->get('leaderboard', 'GameController::leaderboard');
+$routes->post('/guardar-ganador', 'GameController::guardarGanador');
+$routes->post('update-wins', 'PlayerController::updateWins');
+$routes->get('/tabla-lideres', 'PlayerController::showLeaderboard');

@@ -47,7 +47,7 @@ async function delete_(id) {
         resultFetch = getData(data, method, url);
         resultFetch.then(response => response.json())
             .then(data => {
-                //console.log(data);
+                //
                 // Reload View 
                 reloadPage();
             })
@@ -70,7 +70,7 @@ async function getDataId(id) {
      resultFetch = getData(data, method, url);
     resultFetch.then(response => response.json())
         .then(data => {
-            //console.log(data);
+            console.log(data);
             // Set data form
             mainApp.setDataFormJson(data[model]);
             // Show Modal
@@ -136,7 +136,7 @@ mainApp.getForm().addEventListener("submit", async function(event) {
 
             resultFetch.then(response => response.json())
                 .then(data => {
-                    // Process the response data if needed
+                
                     mainApp.hiddenModal();
                     reloadPage();
                 })
@@ -154,7 +154,7 @@ mainApp.getForm().addEventListener("submit", async function(event) {
 
             resultFetch.then(response => response.json())
                 .then(data => {
-                    // Process the response data if needed
+                    console.log(data)
                     mainApp.hiddenModal();
                     reloadPage();
                 })
@@ -176,8 +176,7 @@ function reloadPage() {
     setTimeout(function () {
         // Hidden Preload
         mainApp.hiddenPreload();
-        location.reload();
+        //location.reload();
     }, 500);
 }
-
 

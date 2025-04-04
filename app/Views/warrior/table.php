@@ -11,6 +11,7 @@
                         <th scope="col">status</th>
                         <th scope="col">Type</th>
                         <th scope="col">Race</th>
+                        <th scope="col">Imagen</th>
                         <th scope="col">Actions</th>
                     </tr>
                 </thead>
@@ -54,6 +55,13 @@
                                         echo $raceNombre;
                                     ?>
                                 </td>
+                                <td>
+                                        <?php if (!empty($obj['image'])): ?>
+                                            <img src="<?= base_url($obj['image']) ?>" width="50">
+                                        <?php else: ?>
+                                            No image
+                                        <?php endif; ?>
+                                </td>
 
                                 <td>
                                     <div class="btn-group" role="group" aria-label="Basic mixed styles example">
@@ -82,6 +90,7 @@
                         <th scope="col">status</th>
                         <th scope="col">Type</th>
                         <th scope="col">Race</th>
+                        <th scope="col">Imagen</th>
                         <th scope="col">Actions</th>
             
                     </tr>

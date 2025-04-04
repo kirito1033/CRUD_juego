@@ -17,7 +17,7 @@
                                     <?php 
                                         $typeNombre = "No asignado"; 
                                         foreach ($warriors as $warrior) {
-                                            if ($warrior['warrior_id'] == $warrior['warrior_id']) {
+                                            if ($warrior['warrior_id'] == $obj['warrior_id']) {
                                                 $warriorNombre = $warrior['name'];
                                                 break;
                                             }
