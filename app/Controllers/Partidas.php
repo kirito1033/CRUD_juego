@@ -114,35 +114,99 @@ class Partidas extends Controller {
     }
     public function listarPartidas() {
         $partidas = $this->partidaModel->whereIn('status', ['esperando_jugador', 'publica'])->findAll();
-    
+
+        $now = new \DateTime();
+
+        foreach ($partidas as &$partida) {
+            // Calcular el tiempo restante
+            if (!empty($partida['expires_at'])) {
+                $expiresAt = new \DateTime($partida['expires_at']);
+                $interval = $now->diff($expiresAt);
+
+                // Formatear: días, horas, minutos
+                $partida['tiempo_restante'] = $expiresAt > $now 
+                    ? $interval->format('%ad %hh %im')
+                    : 'Expirada';
+            } else {
+                $partida['tiempo_restante'] = 'Sin límite';
+            }
+        }
+
         return view('partidas/listar', ['partidas' => $partidas]);
     }
+
     
     public function unirsePartida($id) {
-        $session = session();
-        $jugador_id = $session->get('jugador_id_fk');
-    
-        // Verificar si la partida existe y está disponible
-        $partida = $this->partidaModel->find($id);
-    
-        if (!$partida) {
-            return redirect()->to('/partidas')->with('error', 'La partida no existe.');
-        }
-    
-        if (!isset($partida['status']) || !in_array($partida['status'], ['esperando_jugador', 'publica'])) {
-            return redirect()->to('/partidas')->with('error', 'La partida no está disponible.');
-        }
-    
-        // Asignar el jugador 2 a la partida y cambiar el estado
-        $this->partidaModel->update($id, [
-            'jugador2_id_fk' => $jugador_id,
-            'status' => 'en_batalla' // Usar 'status' en lugar de 'estado'
-        ]);
-    
-        return redirect()->to('/partidas/mostrarUltimaPartida/' . $id);
-    }
-    
-    
+    $session = session();
+    $jugador_id = $session->get('jugador_id_fk');
 
+    // Verificar si la partida existe
+    $partida = $this->partidaModel->find($id);
+
+    if (!$partida) {
+        return redirect()->to('/partidas')->with('error', 'La partida no existe.');
+    }
+
+    // Verificar si ha expirado
+    if (!empty($partida['expires_at'])) {
+        $now = new \DateTime();
+        $expiresAt = new \DateTime($partida['expires_at']);
+
+        if ($now > $expiresAt) {
+            // Cambiar el estado de la partida a finalizado si ya expiró
+            $this->partidaModel->update($id, ['status' => 'finalizado']);
+            return redirect()->to('/partidas')->with('error', 'La partida ha expirado.');
+        }
+    }
+
+    // Verificar si está en un estado válido
+    if (!isset($partida['status']) || !in_array($partida['status'], ['esperando_jugador', 'publica'])) {
+        return redirect()->to('/partidas')->with('error', 'La partida no está disponible.');
+    }
+
+    // Asignar el jugador 2 y cambiar el estado a en_batalla
+    $this->partidaModel->update($id, [
+        'jugador2_id_fk' => $jugador_id,
+        'status' => 'en_batalla'
+    ]);
+
+    return redirect()->to('/partidas/mostrarUltimaPartida/' . $id);
+}
+
+    
+    public function joinGame($token)
+    {
+    $partida = $this->partidaModel->where('token', $token)->first();
+
+    if (!$partida) {
+        return $this->failNotFound('Token inválido.');
+    }
+
+    $now = new \DateTime();
+    $expiresAt = new \DateTime($partida['expires_at']);
+
+    if ($now > $expiresAt) {
+        $this->partidaModel->update($partida['id'], ['status' => 'finalizado']);
+        return $this->fail('La partida ha expirado.');
+    }
+
+    // Puedes devolver info o redirigir según tu lógica
+    return $this->respond($partida); 
+    }
+    public function verificarToken()
+    {
+    $data = json_decode($this->request->getBody(), true);
+    $id = $data['id'] ?? null;
+    $tokenInput = $data['token'] ?? null;
+
+    $model = new \App\Models\PartidaModel();
+    $partida = $model->find($id);
+
+    if ($partida && $partida['token'] === $tokenInput) {
+        return $this->response->setJSON(['success' => true]);
+    }
+
+    return $this->response->setJSON(['success' => false]);
+    }
 
 }

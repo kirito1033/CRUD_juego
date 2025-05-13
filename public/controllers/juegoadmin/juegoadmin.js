@@ -1,6 +1,6 @@
 const formId = 'my-form';
 const modalId = 'my-modal';
-const model = 'jugadorModel';
+const model = 'partidaModel';
 const tableId = 'table-index';
 const preloadId = 'preloadId';
 const classEdit = 'edit-input';
@@ -13,11 +13,13 @@ const mainApp = new Main(modalId, formId, classEdit, preloadId);
 var insertUpdate = true;
 var url = "";
 var method = "";
+var url = "";
 var data = "";
 var resultfetch = null;
 
 
 function show(id) {
+ 
     mainApp.disabledFormAll();
     mainApp.resetForm();
     btnEnabled(true);
@@ -29,7 +31,7 @@ function add() {
     insertUpdate = true;
     btnEnabled(false);
     mainApp.showModal();
-  
+
 }
 function edit(id) {
     mainApp.disabledFormEdit();
@@ -39,8 +41,9 @@ function edit(id) {
     getDataId(id);
 }
 async function delete_(id) {
+
      method = 'GET';
-     url = URI_JUGADOR + LIST_CRUD[3] + '/' + id;
+     url = "/partida/" + LIST_CRUD[3] + '/' + id;
      data = "";
     if (confirm(textConfirm) == true) {
         resultFetch = getData(data, method, url);
@@ -63,28 +66,26 @@ async function delete_(id) {
 }
 
 async function getDataId(id) {
-    
+   
      method = 'GET';
-     url = URI_JUGADOR + LIST_CRUD[1] + '/' + id;
+     url = "/partida/" + LIST_CRUD[1] + '/' + id;
      data = mainApp.getDataFormJson();
      resultFetch = getData(data, method, url);
+    
     resultFetch.then(response => response.json())
         .then(data => {
-            console.log( data);
+          
             // Set data form
             mainApp.setDataFormJson(data[model]);
             // Show Modal
             mainApp.showModal();
             // Hidden Preload
             mainApp.hiddenPreload();
-       
         })
         .catch(error => {
             console.error(error);
             // Hidden Preload
             mainApp.hiddenPreload();
-
-        
         })
         .finally();
 }
@@ -96,6 +97,7 @@ function btnEnabled(type) {
 
 async function getData(data, method, url) {
     var parameters;
+   
     // Show Preload
     mainApp.showPreload();
     if (method === "GET") {
@@ -133,13 +135,13 @@ mainApp.getForm().addEventListener("submit", async function(event) {
         if (insertUpdate) {
             // Insertion branch
              method = "POST";
-             url = URI_JUGADOR + LIST_CRUD[0]; // Replace 0 with the appropriate index for insertion if needed
+             url = "/partida/" + LIST_CRUD[0]; // Replace 0 with the appropriate index for insertion if needed
              data = mainApp.getDataFormJson();
              resultFetch = getData(data, method, url);
 
             resultFetch.then(response => response.json())
                 .then(data => {
-                    // Process the response data if needed
+                   console.log(data)
                     mainApp.hiddenModal();
                     reloadPage();
                 })
@@ -151,7 +153,7 @@ mainApp.getForm().addEventListener("submit", async function(event) {
         } else {
             // Update branch
              method = "POST";
-             url = URI_JUGADOR + LIST_CRUD[2]; // Update endpoint
+             url = "/partida/" + LIST_CRUD[2]; // Update endpoint
              data = mainApp.getDataFormJson();
              resultFetch = getData(data, method, url);
 
@@ -182,4 +184,5 @@ function reloadPage() {
         location.reload();
     }, 500);
 }
+
 

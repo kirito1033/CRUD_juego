@@ -54,32 +54,37 @@ class WarriorController extends Controller
     }
 
 
-    public function create() 
-    { 
-        if ($this->request->isAJAX()) { 
-         
-         
-            $dataModel = $this->getDataModel(); 
+    public function create()
+    {
+    if ($this->request->isAJAX()) {
+        $dataModel = $this->getDataModel();
 
-            
-            if ($this->warrior->insert($dataModel)) { 
-                $data['message'] = 'success'; 
-                $data['response'] = ResponseInterface::HTTP_OK; 
-                $data['data'] = $dataModel; 
-                $data['csrf'] = csrf_hash(); 
-            } else { 
-                $data['message'] = 'Error creating user'; 
-                $data['response'] = ResponseInterface::HTTP_NO_CONTENT; 
-                $data['data'] = ''; 
-            } 
-        } else { 
-            $data['message'] = 'Error Ajax'; 
-            $data['response'] = ResponseInterface::HTTP_CONFLICT; 
-            $data['data'] = ''; 
-        } 
-        echo json_encode($dataModel); 
+        // Manejo de imagen
+        $img = $this->request->getFile('imagen');
+        if ($img && $img->isValid() && !$img->hasMoved()) {
+            $newName = $img->getRandomName();
+            $img->move(ROOTPATH . 'public/uploads/', $newName);
+            $dataModel["imagen"] = $newName;
+        }
+
+        if ($this->warrior->insert($dataModel)) {
+            $data["message"] = "success";
+            $data["response"] = ResponseInterface::HTTP_OK;
+            $data["data"] = $dataModel;
+            $data["csrf"] = csrf_hash();
+        } else {
+            $data["message"] = "Error al crear usuario";
+            $data["response"] = ResponseInterface::HTTP_NO_CONTENT;
+            $data["data"] = "";
+        }
+    } else {
+        $data["message"] = "Error Ajax";
+        $data["response"] = ResponseInterface::HTTP_CONFLICT;
+        $data["data"] = "";
     }
 
+        echo json_encode($data);
+    }
     
     public function singleWarrior($id = null) 
     { 
@@ -227,5 +232,51 @@ class WarriorController extends Controller
             error_log("Error en inserción: " . print_r($data, true));
         }
     }
- 
+    
+    public function updateImage()
+{
+    if ($this->request->isAJAX()) {
+
+        $id = $this->request->getVar('id'); // ✅ coincide con el input hidden
+
+        // Verificar si el guerrero existe
+        $warrior = $this->warrior->find($id);
+        if (!$warrior) {
+            return $this->response->setJSON([
+                'message' => 'Guerrero no encontrado',
+                'response' => ResponseInterface::HTTP_NOT_FOUND
+            ]);
+        }
+
+        // Obtener imagen con el nombre correcto
+        $img = $this->request->getFile('imagen'); // ✅ coincide con el name del input
+
+        if ($img && $img->isValid() && !$img->hasMoved()) {
+            $newName = $img->getRandomName();
+            $img->move(ROOTPATH . 'public/uploads/', $newName);
+
+            // Actualizar en la base de datos
+            $this->warrior->update($id, ['image' => $newName]);
+
+            return $this->response->setJSON([
+                'message' => 'success',
+                'response' => ResponseInterface::HTTP_OK,
+                'csrf' => csrf_hash(),
+                'image' => $newName
+            ]);
+        } else {
+            return $this->response->setJSON([
+                'message' => 'Error al subir imagen',
+                'response' => ResponseInterface::HTTP_NO_CONTENT
+            ]);
+        }
+    }
+
+    return $this->response->setJSON([
+        'message' => 'Petición inválida',
+        'response' => ResponseInterface::HTTP_BAD_REQUEST
+    ]);
+}
+
+
 }

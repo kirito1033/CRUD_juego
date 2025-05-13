@@ -55,12 +55,13 @@
                                         echo $raceNombre;
                                     ?>
                                 </td>
-                                <td>
-                                        <?php if (!empty($obj['image'])): ?>
-                                            <img src="<?= base_url($obj['image']) ?>" width="50">
-                                        <?php else: ?>
-                                            No image
-                                        <?php endif; ?>
+                             
+                                 <td>
+                                    <?php if ($obj['image']): ?>
+                                        <img src="<?= base_url('uploads/' . $obj['image']) ?>" alt="image" width="60">
+                                    <?php else: ?>
+                                        <span class="text-muted">Sin imagen</span>
+                                    <?php endif; ?>
                                 </td>
 
                                 <td>
@@ -71,6 +72,9 @@
                                             class="btn btn-warning" style="font-size: 0.5em;">EDIT</button>
                                         <button type="button" onclick="delete_(<?php echo $obj['warrior_id']; ?>)" 
                                             class="btn btn-danger" style="font-size: 0.5em;">DELETE</button>
+                                            <button type="button" class="btn btn-info btn-sm" onclick="showImageModal(<?php echo $obj['warrior_id']; ?>)">
+                                            <i class="bi bi-image"></i> Imagen
+                                            </button>
                                     </div>
                                 </td>
                             </tr>
@@ -78,22 +82,6 @@
 
                     <?php endif; ?>
                 </tbody>
-                <tfoot class="table-dark">
-                    <tr class="text-center">
-                        <th scope="col">#</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Total Power</th>
-                        <th scope="col">Total Magict</th>
-                        <th scope="col">health</th>
-                        <th scope="col">speed</th>
-                        <th scope="col">intelligence</th>
-                        <th scope="col">status</th>
-                        <th scope="col">Type</th>
-                        <th scope="col">Race</th>
-                        <th scope="col">Imagen</th>
-                        <th scope="col">Actions</th>
-            
-                    </tr>
-                </tfoot>
+               
             </table>
       

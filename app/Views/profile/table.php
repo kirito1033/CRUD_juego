@@ -46,15 +46,6 @@
 
                     <?php endif; ?>
                 </tbody>
-                <tfoot class="table-dark">
-                    <tr class="text-center">
-                    <th scope="col">#</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">photo</th>
-                        <th scope="col">Jugador_Usuario</th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                </tfoot>
+                
             </table>
       

@@ -1,4 +1,4 @@
-            <table class="table" id="table-index">
+            <table class="table table-index" id="table-index">
                 <thead class="table-dark">
                     <tr class="text-center">
                         <th scope="col">#</th>
@@ -28,13 +28,5 @@
                         <?php endforeach; ?>
                     <?php endif; ?>
                 </tbody>
-                <tfoot class="table-dark">
-                    <tr class="text-center">
-                        <th scope="col">#</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                </tfoot>
             </table>
       

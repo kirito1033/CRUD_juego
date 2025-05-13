@@ -55,13 +55,5 @@
 
                     <?php endif; ?>
                 </tbody>
-                <tfoot class="table-dark">
-                    <tr class="text-center">
-                    <th scope="col">#</th>
-                        <th scope="col">Warrior</th>
-                        <th scope="col">Spell</th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                </tfoot>
             </table>
       

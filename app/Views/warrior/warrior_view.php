@@ -49,7 +49,28 @@
         </div>
     </div>
     <!-- End Modal -->
-
+    <div class="modal fade" id="modalImagenGuerrero" tabindex="-1" aria-labelledby="imagenModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="formImagenGuerrero" enctype="multipart/form-data">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title">Actualizar Imagen del Guerrero</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+            <input type="hidden" name="id" id="guerreroIdImagen">
+            <div class="mb-3">
+                <label for="imagen" class="form-label">Selecciona una imagen</label>
+                <input class="form-control" type="file" name="imagen" id="imagenGuerreroInput" accept="image/*" required>
+            </div>
+            </div>
+            <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Subir Imagen</button>
+            </div>
+        </div>
+        </form>
+    </div>
+    </div>
     <!-- Footer -->
     <?php require_once('../app/Views/footer/footer.php'); ?>
     <!-- End Footer -->
@@ -63,7 +84,42 @@
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
 
     <script src="http://localhost/CRUD/crud/public/controllers/warrior/warrior.js"></script>
-    
+   <script>
+    function showImageModal(id) {
+    // Este ID viene del botón: showImageModal(<?php echo $obj['warrior_id']; ?>)
+    document.getElementById('guerreroIdImagen').value = id;
+    document.getElementById('imagenGuerreroInput').value = "";
+    const modal = new bootstrap.Modal(document.getElementById('modalImagenGuerrero'));
+    modal.show();
+    }
+
+    document.getElementById("formImagenGuerrero").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const form = document.getElementById("formImagenGuerrero");
+    const formData = new FormData(form);
+
+    fetch("<?= base_url('warrior/updateImage') ?>", {
+        method: "POST",
+        body: formData,
+        headers: {
+        "X-Requested-With": "XMLHttpRequest"
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.message === "success") {
+        alert("Imagen actualizada correctamente.");
+        location.reload();
+        } else {
+        alert(data.message);
+        }
+    })
+    .catch(err => {
+        console.error("Error al subir imagen:", err);
+    });
+    });
+    </script>
+</script>
 
 </body>
 

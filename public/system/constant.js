@@ -27,3 +27,5 @@ const URI_WARRIORSPELLS="/warriorspells/"
 const URI_REGISTRARUSER="/registerUser/"
 
 const URI_REGISTER="/register/";
+
+const URI_PARTIDA="/partida/";

@@ -22,8 +22,9 @@ class JugadorController extends Controller
         $this->model = "jugadorModel";
     }
 
+   
     public function login()
-    {
+{
     $username = $this->request->getVar('username');
     $password = $this->request->getVar('password');
 
@@ -37,29 +38,38 @@ class JugadorController extends Controller
 
         $session = session();
 
-        // Si el jugador tiene rol 1 y no hay jugador 1, se guarda como jugador 1
+        // Si el jugador tiene rol 2, guarda el token y redirige a /jugador
+        if ($jugador['roles_fk'] == "2") {
+            $session->set('token_jugador', $token);  // Guarda el token del jugador 2
+            $session->set('jugador_id_fk', $jugador['jugador_id']);  // Guarda el ID del jugador 2
+            $session->set('jugador_role', $jugador['roles_fk']);  // Guarda el rol del jugador 2
+            return redirect()->to('/jugador');  // Redirige a la página /jugador
+        }
+
+        // Si el jugador tiene rol 1 y no hay jugador 1 logueado, se guarda como jugador 1
         if ($jugador['roles_fk'] == "1" && !$session->has('token_jugador1')) {
             $session->set('token_jugador1', $token);
             $session->set('jugador1_id', $jugador['jugador_id']);
-            $session->set('jugador_id_fk', $jugador['jugador_id']); // Asegúrate de guardar jugador_id_fk
-        
+            $session->set('jugador_id_fk', $jugador['jugador_id']); // Guarda el ID del jugador 1
+            $session->set('jugador_role', $jugador['roles_fk']);  // Guarda el rol del jugador 1
             return redirect()->to('/auth/login')->with('alert_message', 'Jugador 1 logueado. Ahora ingrese el Jugador 2.');
         }
 
-        // Si hay jugador 1, se guarda este como jugador 2
+        // Si hay jugador 1 y no hay jugador 2, se guarda como jugador 2
         else if ($session->has('token_jugador1') && !$session->has('token_jugador2')) {
             $session->set('token_jugador2', $token);
             $session->set('jugador2_id', $jugador['jugador_id']);
-            $session->set('jugador_id_fk', $jugador['jugador_id']); // Asegúrate de guardar jugador_id_fk
-        
+            $session->set('jugador_id_fk', $jugador['jugador_id']); // Guarda el ID del jugador 2
+            $session->set('jugador_role', $jugador['roles_fk']);  // Guarda el rol del jugador 2
             return redirect()->to('/verificar-usuarios');
         }
 
         return redirect()->to('/auth/login')->with('alert_message', 'Ya hay dos jugadores logueados.');
     } else {
-        return redirect()->to('/auth/login')->with('alert_message', 'Credenciales incorrectas');
+        return redirect()->to('/auth/login')->with('error', 'Credenciales incorrectas');
     }
-    }
+}
+
 
 
     
@@ -115,31 +125,43 @@ public function store()
         }
     }
 
-    public function index()
+   
+   public function index()
     {
-    $token = session()->get('token');
+        $session = session();
+        
+        // Intenta obtener el token desde cualquier posible sesión activa
+        $token = $session->get('token_jugador') ?? $session->get('token_jugador1') ?? $session->get('token_jugador2');
+        
+        if (!$token) {
+            return redirect()->to('/auth/login')->with('error', 'Acceso no autorizado');
+        }
 
-    if (!$token) {
-        return redirect()->to('/auth/login')->with('error', 'Acceso no autorizado');
+        try {
+            $jugadorData = JwtHelper::verifyToken($token);
+            
+            // Aquí debes tener en cuenta que 'role' debe estar dentro del payload.
+            $rolJugador = $jugadorData['role'] ?? null;
+
+            if ($rolJugador == '2') {
+                return redirect()->to('/jugador');
+            }
+
+            $this->data['title'] = "JUGADOR";
+            $this->data[$this->model] = $this->jugadorModel->orderBy($this->primaryKey, 'ASC')->findAll();
+
+            $roleModel = new \App\Models\RoleModel();
+            $statusModel = new \App\Models\JugadorStatusModel();
+
+            $this->data['roles'] = $roleModel->findAll();
+            $this->data['estados'] = $statusModel->findAll();
+
+            return view('jugador/jugador_view', $this->data);
+        } catch (\Exception $e) {
+            return redirect()->to('/auth/login')->with('error', 'Token inválido o expirado');
+        }
     }
-
-    try {
-        $jugadorData = JwtHelper::verifyToken($token);
-
-        $this->data['title'] = "JUGADOR";
-        $this->data[$this->model] = $this->jugadorModel->orderBy($this->primaryKey, 'ASC')->findAll();
-
-        $roleModel = new \App\Models\RoleModel();
-        $statusModel = new \App\Models\JugadorStatusModel();
-
-        $this->data['roles'] = $roleModel->findAll();
-        $this->data['estados'] = $statusModel->findAll();
-
-        return view('jugador/jugador_view', $this->data);
-    } catch (\Exception $e) {
-        return redirect()->to('/auth/login')->with('error', 'Token inválido o expirado');
-    }
-}
+    
 
 
 

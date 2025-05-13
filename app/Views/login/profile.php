@@ -11,6 +11,7 @@
     
         <form id="register-form" method="POST" action="<?= base_url('/auth/store2') ?>" enctype="multipart/form-data">
         <?= csrf_field() ?>
+        
         <h2 class="text-center mb-4">Registrar Perfil</h2>
             <div class="form-floating mb-3">
                 <input type="text" class="form-control " id="profile_email" name="profile_email" placeholder="Email" required>

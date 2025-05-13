@@ -7,126 +7,260 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
-        body {
-            background-color: #2c2c2c;
-            color: white;
-            text-align: center;
-        }
-        .disabled {
-                opacity: 0.5;
-                pointer-events: none;
-                cursor: not-allowed;
-        }
+    body {
+        background-color: #1F2326; /* Fondo principal de la paleta */
+        color: #8C5C03; /* Texto principal */
+        text-align: center;
+    }
 
-        .container {
-            margin-top: 50px;
-        }
+    .disabled {
+        opacity: 0.5;
+        pointer-events: none;
+        cursor: not-allowed;
+        background-color: #734002; /* Fondo para elementos deshabilitados */
+    }
 
+    .container {
+        margin-top: 50px;
+        background-color: #2A2F33; /* Fondo ligeramente más claro */
+        border: 1px solid #734002; /* Borde con color de la paleta */
+        border-radius: 8px;
+        padding: 20px;
+    }
+
+    h2 {
+        color: #F2BF27; /* Acento para el título */
+        border-bottom: 2px solid #734002; /* Borde inferior */
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+
+    .card-container {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+    .warrior-card {
+        width: 210px;
+        height: 310px;
+        perspective: 1000px;
+        cursor: pointer;
+    }
+
+    .card-inner {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        transform-style: preserve-3d;
+        transition: transform 0.6s;
+    }
+
+    .flipped .card-inner {
+        transform: rotateY(180deg);
+    }
+
+    .card-front, .card-back {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        backface-visibility: hidden;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px #734002; /* Sombra con color de la paleta */
+    }
+
+    .card-front {
+        background: #2A2F33; /* Fondo ligeramente más claro */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        font-weight: bold;
+        color: #F2BF27; /* Acento para texto */
+        border: 2px solid #734002; /* Borde con color de la paleta */
+    }
+
+    .card-back {
+        transform: rotateY(180deg);
+        background-size: cover;
+        background-position: center;
+        border: 2px solid #734002; /* Borde con color de la paleta */
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        padding-top: 10px;
+    }
+
+    .card-back strong {
+        color: #F2BF27; /* Acento para el nombre */
+        font-size: 14px;
+    }
+
+    .info-overlay {
+        position: absolute;
+        bottom: 0;
+        background: rgba(31, 35, 38, 0.7); /* Fondo semitransparente basado en #1F2326 */
+        color: #F2BF27; /* Acento para texto */
+        width: 100%;
+        padding: 5px;
+        font-size: 12px;
+        text-align: center;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+    }
+
+    .player-profile {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .player-profile img {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        border: 3px solid #734002; /* Borde con color de la paleta */
+        object-fit: cover;
+        max-width: 100%;
+        transition: border-color 0.3s;
+    }
+
+    .player-profile img:hover {
+        border-color: #F2BF27; /* Acento para hover */
+    }
+
+    .player-profile h3 {
+        margin-top: 10px;
+        font-size: 1.2rem;
+        color: #F2BF27; /* Acento para título */
+    }
+
+    .selected {
+        border: 3px solid #F2BF27 !important; /* Acento para selección */
+        border-radius: 10px;
+    }
+
+    .flipped .card-front {
+        display: none;
+    }
+
+    .flipped .card-back {
+        display: block;
+    }
+
+    .player-life {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #F2BF27; /* Acento en lugar de rojo */
+        margin-top: 5px;
+    }
+
+    .btn-primary {
+        background-color: #1F2326; /* Fondo del botón Ver Detalles */
+        color: #F2BF27; /* Texto con acento */
+        border: 1px solid #734002; /* Borde con color de la paleta */
+        border-radius: 5px;
+        padding: 10px 20px;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    .btn-primary:hover {
+        background-color: #F2BF27; /* Acento para hover */
+        color: #1F2326;
+    }
+
+    .btn-danger {
+        background-color: #BF8415; /* Fondo del botón Iniciar Pelea */
+        color: #1F2326; /* Texto oscuro para contraste */
+        border: 1px solid #734002; /* Borde con color de la paleta */
+        border-radius: 5px;
+        padding: 12px 24px;
+        font-size: 1.2rem;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    .btn-danger:hover {
+        background-color: #F2BF27; /* Acento para hover */
+        color: #1F2326;
+    }
+
+    .modal-content {
+        background-color: #2A2F33; /* Fondo del modal */
+        border: 1px solid #734002; /* Borde con color de la paleta */
+        border-radius: 10px;
+    }
+
+    .modal-header {
+        background-color: #1F2326; /* Fondo del encabezado */
+        border-bottom: 1px solid #734002; /* Borde inferior */
+    }
+
+    .modal-title {
+        color: #F2BF27; /* Acento para el título */
+    }
+
+    .btn-close {
+        filter: invert(1) sepia(1) saturate(5) hue-rotate(180deg); /* Ícono blanco ajustado */
+    }
+
+    .modal-body {
+        color: #8C5C03; /* Texto principal */
+    }
+
+    .list-group-item {
+        background-color: #1F2326; /* Fondo de los ítems */
+        color: #8C5C03; /* Texto principal */
+        border: 1px solid #734002; /* Borde con color de la paleta */
+    }
+
+    .list-group-item strong {
+        color: #F2BF27; /* Acento para etiquetas */
+    }
+
+    .modal-footer {
+        border-top: 1px solid #734002; /* Borde superior */
+    }
+
+    .btn-secondary {
+        background-color: #734002; /* Fondo del botón Cerrar */
+        color: #F2BF27; /* Texto con acento */
+        border: 1px solid #734002; /* Borde con color de la paleta */
+    }
+
+    .btn-secondary:hover {
+        background-color: #F2BF27; /* Acento para hover */
+        color: #1F2326;
+    }
+
+    #battleResultModal .modal-content {
+        background-color: #2A2F33; /* Fondo del modal de resultado */
+        border: 2px solid #734002; /* Borde con color de la paleta */
+    }
+
+    /* Responsividad */
+    @media (max-width: 768px) {
         .card-container {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 30px;
+            flex-wrap: wrap;
         }
 
         .warrior-card {
-            width: 210px;
-            height: 310px;
-            perspective: 1000px;
-            cursor: pointer;
+            width: 45%;
+            max-width: 45%;
         }
+    }
 
-        .card-inner {
+    @media (max-width: 576px) {
+        .warrior-card {
             width: 100%;
-            height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.6s;
-        }
-
-        .flipped .card-inner {
-            transform: rotateY(180deg);
-        }
-
-        .card-front, .card-back {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            backface-visibility: hidden;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-        }
-
-        .card-front {
-            background: #343a40;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            font-weight: bold;
-            border: 2px solid #f8f9fa;
-        }
-
-        .card-back {
-            transform: rotateY(180deg);
-            background-size: cover;
-            background-position: center;
-            border: 2px solid #f8f9fa;
-            position: relative;
-        }
-
-        .info-overlay {
-            position: absolute;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            width: 100%;
-            padding: 5px;
-            font-size: 12px;
-            text-align: center;
-            border-bottom-left-radius: 10px;
-            border-bottom-right-radius: 10px;
-        }
-
-        .player-profile {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .player-profile img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            border: 3px solid white;
-            object-fit: cover;
             max-width: 100%;
         }
-
-        .player-profile h3 {
-            margin-top: 10px;
-            font-size: 1.2rem;
-        }
-        .selected {
-        border: 3px solid rgb(20, 175, 105) !important;
-        border-radius: 10px;
-        }
-        .flipped .card-front {
-        display: none;
-        }
-
-        .flipped .card-back {
-        display: block;
-        }
-        .player-life {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #ff4c4c;
-            margin-top: 5px;
-        }
-    </style>
+    }
+        </style>
 </head>
 <body>
 <?php require_once('../app/Views/preload/preload.php'); ?>
@@ -156,101 +290,95 @@
 
     <!-- Contenedor de jugadores -->
     <div class="players-container">
-        <!-- Jugador 1 -->
-        <div class="player">
-            <div class="player-profile" data-player="1">
-         <<input type="hidden" name="profile_id" id="profile_id1" value="<?= isset($profile1['profile_id']) ? esc($profile1['profile_id']) : '' ?>">
-                <img src="<?= isset($profile1['profile_photo']) ? base_url($profile1['profile_photo']) : base_url('default_profile.png') ?>" alt="Perfil 1">
-                <h3><?= isset($profile1['profile_name']) ? esc($profile1['profile_name']) : 'Jugador 1' ?></h3>
-                <p class="player-life">❤️ Vida: <?= isset($partida['player_life']) ? esc($partida['player_life']) : '0' ?></p>
-            </div>
-            <div class="card-container">
-                <?php foreach ($player1Cards as $w): ?>
-                    <div class="warrior-card" 
-                                data-player="1" 
-                                data-warrior-id="<?= esc($w['warrior_id']) ?>" 
-                                data-power-percentage="<?= esc($w['power_percentage']) ?>" 
-                                data-spell-percentage="<?= esc($w['spell_percentage']) ?>" 
-                                onclick="flipCard(this)" 
-                                oncontextmenu="selectCard(event, this)">
-
-                                <div class="card-inner">
-                                    <div class="card-front">?</div>
-                                    <div class="card-back" style="background-image: url('<?= base_url($w['warrior_image']) ?>');">
-                                    <strong><?= esc($w['warrior_name']) ?></strong>
-                                        <div class="info-overlay">
-                                        <p><strong>Raza:</strong> <?= esc($w['warrior_race']) ?></p>
-                                        <p><strong>Vida:</strong> <span class="warrior-life"><?= esc($w['warrior_life']) ?></span></p>
-                                        <p><strong>Daño:</strong> <?= esc($w['warrior_damage']) ?></p>
-
-                                        <?php if ($partida['win_condition'] == 'poder'): ?>
-                                       <p><strong>Poder:</strong> <?= esc($w['power_name'] ?? 'N/A') ?></p>
-                                       <?php elseif ($partida['win_condition'] == 'magia'): ?>
-                                        <p><strong>Hechizo:</strong> <?= esc($w['spell_name'] ?? 'N/A') ?></p>
-
-            
-                                        <?php elseif ($partida['win_condition'] == 'suma'): ?>
-                                            <p><strong>Poder:</strong> <?= esc($w['power_name'] ?? 'N/A') ?></p>
-                                            <p><strong>Hechizo:</strong> <?= esc($w['spell_name'] ?? 'N/A') ?></p>
-                                        <?php endif; ?>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                <?php endforeach; ?>
-            </div>
+    <!-- Jugador 1 -->
+    <div class="player">
+        <div class="player-profile" data-player="1">
+            <input type="hidden" name="profile_id" id="profile_id1" value="<?= isset($profile1['profile_id']) ? esc($profile1['profile_id']) : '' ?>">
+             <img src="<?= isset($profile1['profile_photo']) ? base_url($profile1['profile_photo']) : base_url('default_profile.png') ?>" alt="Perfil 1">
+            <h3><?= isset($profile1['profile_name']) ? esc($profile1['profile_name']) : 'Jugador 1' ?></h3>
+            <p class="player-life">❤️ Vida: <?= isset($partida['player_life']) ? esc($partida['player_life']) : '0' ?></p>
         </div>
+        <div class="card-container">
+            <?php foreach ($player1Cards as $w): ?>
+                <div class="warrior-card" 
+                    data-player="1" 
+                    data-warrior-id="<?= esc($w['warrior_id']) ?>" 
+                    data-power-percentage="<?= esc($w['power_percentage']) ?>" 
+                    data-spell-percentage="<?= esc($w['spell_percentage']) ?>" 
+                    onclick="flipCard(this)" 
+                    oncontextmenu="selectCard(event, this)">
+                    <div class="card-inner">
+                        <div class="card-front">?</div>
+                        <div class="card-back" style="background-image: url('<?= !empty($w['warrior_image']) ? base_url('uploads/' . $w['warrior_image']) : base_url('uploads/default_warrior.png') ?>');">
+                            <strong><?= esc($w['warrior_name']) ?></strong>
+                            <div class="info-overlay">
+                                <p><strong>Raza:</strong> <?= esc($w['warrior_race']) ?></p>
+                                <p><strong>Vida:</strong> <span class="warrior-life"><?= esc($w['warrior_life']) ?></span></p>
+                                <p><strong>Daño:</strong> <?= esc($w['warrior_damage']) ?></p>
 
-        <!-- Jugador 2 -->
-        <div class="player">
-            <div class="player-profile " data-player="2">
-            <input type="hidden" name="profile_id" id="profile_id2" value="<?= isset($profile2['profile_id']) ? esc($profile2['profile_id']) : '' ?>">
-                <img src="<?= isset($profile2['profile_photo']) ? base_url($profile2['profile_photo']) : base_url('default_profile.png') ?>" alt="Perfil 2">
-                <h3><?= isset($profile2['profile_name']) ? esc($profile2['profile_name']) : 'Jugador 2' ?></h3>
-                <p class="player-life">❤️ Vida: <?= isset($partida['player_life']) ? esc($partida['player_life']) : '0' ?></p>
-            </div>
-            <div class="card-container">
-                <?php foreach ($player2Cards as $w): ?>
-                    <div class="warrior-card" 
-                                data-warrior-id="<?= esc($w['warrior_id']) ?>" 
-                                data-player="2" 
-                                data-warrior-id="<?= esc($w['warrior_id']) ?>" 
-                                data-power-percentage="<?= esc($w['power_percentage']) ?>" 
-                                data-spell-percentage="<?= esc($w['spell_percentage']) ?>" 
-                                onclick="flipCard(this)" 
-                                oncontextmenu="selectCard(event, this)">
-
-                                <div class="card-inner">
-                                    <div class="card-front">?</div>
-                                    <div class="card-back" style="background-image: url('<?= base_url($w['warrior_image']) ?>');">
-                                    <strong><?= esc($w['warrior_name']) ?></strong>
-                                        <div class="info-overlay">
-                                        <p><strong>Raza:</strong> <?= esc($w['warrior_race']) ?></p>
-                                        <p><strong>Vida:</strong> <span class="warrior-life"><?= esc($w['warrior_life']) ?></span></p>
-                                        <p><strong>Daño:</strong> <?= esc($w['warrior_damage']) ?></p>
-
-                                        <?php if ($partida['win_condition'] == 'poder'): ?>
-                                       <p><strong>Poder:</strong> <?= esc($w['power_name'] ?? 'N/A') ?></p>
-                                       <?php elseif ($partida['win_condition'] == 'magia'): ?>
-                                        <p><strong>Hechizo:</strong> <?= esc($w['spell_name'] ?? 'N/A') ?></p>
-
-            
-                                        <?php elseif ($partida['win_condition'] == 'suma'): ?>
-                                            <p><strong>Poder:</strong> <?= esc($w['power_name'] ?? 'N/A') ?></p>
-                                            <p><strong>Hechizo:</strong> <?= esc($w['spell_name'] ?? 'N/A') ?></p>
-                                        <?php endif; ?>
-                                        </div>
-                                    </div>
-                                </div>
+                                <?php if ($partida['win_condition'] == 'poder'): ?>
+                                    <p><strong>Poder:</strong> <?= esc($w['power_name'] ?? 'N/A') ?></p>
+                                <?php elseif ($partida['win_condition'] == 'magia'): ?>
+                                    <p><strong>Hechizo:</strong> <?= esc($w['spell_name'] ?? 'N/A') ?></p>
+                                <?php elseif ($partida['win_condition'] == 'suma'): ?>
+                                    <p><strong>Poder:</strong> <?= esc($w['power_name'] ?? 'N/A') ?></p>
+                                    <p><strong>Hechizo:</strong> <?= esc($w['spell_name'] ?? 'N/A') ?></p>
+                                <?php endif; ?>
                             </div>
-                <?php endforeach; ?>
-            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
         </div>
     </div>
-    <div class="text-center mt-4">
-    <button class="btn btn-danger btn-lg" id="startBattle" onclick="startBattle()">🔥 Iniciar Pelea 🔥</button>
+
+    <!-- Jugador 2 -->
+    <div class="player">
+        <div class="player-profile" data-player="2">
+            <input type="hidden" name="profile_id" id="profile_id2" value="<?= isset($profile2['profile_id']) ? esc($profile2['profile_id']) : '' ?>">
+            <img src="<?= isset($profile2['profile_photo']) ? base_url($profile2['profile_photo']) : base_url('default_profile.png') ?>" alt="Perfil 2">
+            <h3><?= isset($profile2['profile_name']) ? esc($profile2['profile_name']) : 'Jugador 2' ?></h3>
+            <p class="player-life">❤️ Vida: <?= isset($partida['player_life']) ? esc($partida['player_life']) : '0' ?></p>
+        </div>
+        <div class="card-container">
+            <?php foreach ($player2Cards as $w): ?>
+                <div class="warrior-card" 
+                    data-player="2" 
+                    data-warrior-id="<?= esc($w['warrior_id']) ?>" 
+                    data-power-percentage="<?= esc($w['power_percentage']) ?>" 
+                    data-spell-percentage="<?= esc($w['spell_percentage']) ?>" 
+                    onclick="flipCard(this)" 
+                    oncontextmenu="selectCard(event, this)">
+                    <div class="card-inner">
+                        <div class="card-front">?</div>
+                        <div class="card-back" style="background-image: url('<?= !empty($w['warrior_image']) ? base_url('uploads/' . $w['warrior_image']) : base_url('uploads/default_warrior.png') ?>');">
+                            <strong><?= esc($w['warrior_name']) ?></strong>
+                            <div class="info-overlay">
+                                <p><strong>Raza:</strong> <?= esc($w['warrior_race']) ?></p>
+                                <p><strong>Vida:</strong> <span class="warrior-life"><?= esc($w['warrior_life']) ?></span></p>
+                                <p><strong>Daño:</strong> <?= esc($w['warrior_damage']) ?></p>
+
+                                <?php if ($partida['win_condition'] == 'poder'): ?>
+                                    <p><strong>Poder:</strong> <?= esc($w['power_name'] ?? 'N/A') ?></p>
+                                <?php elseif ($partida['win_condition'] == 'magia'): ?>
+                                    <p><strong>Hechizo:</strong> <?= esc($w['spell_name'] ?? 'N/A') ?></p>
+                                <?php elseif ($partida['win_condition'] == 'suma'): ?>
+                                    <p><strong>Poder:</strong> <?= esc($w['power_name'] ?? 'N/A') ?></p>
+                                    <p><strong>Hechizo:</strong> <?= esc($w['spell_name'] ?? 'N/A') ?></p>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
     </div>
 </div>
+
+<div class="text-center mt-4">
+    <button class="btn btn-danger btn-lg" id="startBattle" onclick="startBattle()">🔥 Iniciar Pelea 🔥</button>
+</div>
+
 
 
 <!-- Modal para detalles de la partida -->
